@@ -18,4 +18,4 @@ SkillGroups:
         Description: The API plugin offers current UTC timestamp.
     Settings:
       OpenApiSpecUrl: https://raw.githubusercontent.com/Norseman42/SCP-Plugin-Examples/refs/heads/main/GetTime%20Plugin/timeapi-openapi-spec.yaml
-      EndpointUrl: https://api.timeapi.io
+      EndpointUrl: https://thetimeapi.dev/api/time/utc
