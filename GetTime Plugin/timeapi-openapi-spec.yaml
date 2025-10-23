@@ -1,0 +1,911 @@
+openapi: 3.0.3
+info:
+  title: TimeAPI - Comprehensive Time Zone API
+  description: |
+    TimeAPI provides comprehensive timezone conversion, current time retrieval, and timezone data services. 
+    Built for accuracy, speed, and reliability with global timezone support and automatic DST handling.
+    
+    ## Authentication
+    All API endpoints require authentication using an API key in the request header:
+    ```
+    X-API-Key: your_api_key_here
+    ```
+    
+    ## Rate Limits
+    - **Free Plan**: 100 requests per hour
+    - **Premium Plan**: Unlimited requests ($5/month)
+    - **Enterprise Plan**: Unlimited requests + SLA ($50/month)
+    
+    ## Output Formats
+    All endpoints support multiple output formats:
+    - JSON (default)
+    - XML (add `?format=xml`)
+    - CSV (add `?format=csv`)
+  version: 1.0.0
+  contact:
+    name: TimeAPI Support
+    url: https://timeapi.io/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: https://api.timeapi.io
+    description: Production API Server
+
+security:
+  - ApiKeyAuth: []
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key for authentication
+  
+  schemas:
+    CurrentTimeResponse:
+      type: object
+      properties:
+        timezone:
+          type: string
+          description: IANA timezone identifier
+          example: "America/New_York"
+        current_time:
+          type: string
+          format: date-time
+          description: Current time in ISO 8601 format
+          example: "2024-01-15T14:30:45-05:00"
+        utc_offset:
+          type: string
+          description: UTC offset for the timezone
+          example: "-05:00"
+        dst_active:
+          type: boolean
+          description: Whether daylight saving time is currently active
+          example: false
+        abbreviation:
+          type: string
+          description: Timezone abbreviation
+          example: "EST"
+        location:
+          type: object
+          properties:
+            country:
+              type: string
+              example: "United States"
+            region:
+              type: string
+              example: "New York"
+    
+    CurrentTimeCoordinateResponse:
+      type: object
+      properties:
+        timezone:
+          type: string
+          description: IANA timezone identifier
+          example: "America/New_York"
+        current_time:
+          type: string
+          format: date-time
+          description: Current time in ISO 8601 format
+          example: "2024-01-15T14:30:45-05:00"
+        utc_offset:
+          type: string
+          description: UTC offset for the timezone
+          example: "-05:00"
+        dst_active:
+          type: boolean
+          description: Whether daylight saving time is currently active
+          example: false
+        coordinates:
+          type: object
+          properties:
+            latitude:
+              type: number
+              format: float
+              example: 40.7128
+            longitude:
+              type: number
+              format: float
+              example: -74.0060
+    
+    TimezoneConversionRequest:
+      type: object
+      required:
+        - fromTimeZone
+        - toTimeZone
+        - dateTime
+      properties:
+        fromTimeZone:
+          type: string
+          description: Source timezone identifier
+          example: "UTC"
+        toTimeZone:
+          type: string
+          description: Target timezone identifier
+          example: "America/New_York"
+        dateTime:
+          type: string
+          format: date-time
+          description: ISO 8601 datetime string
+          example: "2024-01-15T19:30:45Z"
+        dstAmbiguity:
+          type: string
+          description: DST ambiguity handling
+          example: ""
+    
+    TimezoneConversionResponse:
+      type: object
+      properties:
+        fromTimeZone:
+          type: string
+          example: "UTC"
+        toTimeZone:
+          type: string
+          example: "America/New_York"
+        originalDateTime:
+          type: string
+          format: date-time
+          example: "2024-01-15T19:30:45Z"
+        convertedDateTime:
+          type: string
+          format: date-time
+          example: "2024-01-15T14:30:45-05:00"
+        dstActive:
+          type: boolean
+          example: false
+    
+    TimeOperationRequest:
+      type: object
+      required:
+        - baseDateTime
+        - timeSpan
+      properties:
+        baseDateTime:
+          type: string
+          format: date-time
+          description: Base datetime in ISO format
+          example: "2024-01-15T14:30:45"
+        timeSpan:
+          type: string
+          description: Time span in format "days.hours:minutes:seconds"
+          example: "1.12:30:00"
+        timeZone:
+          type: string
+          description: Timezone for calculation
+          example: "UTC"
+    
+    TimeOperationResponse:
+      type: object
+      properties:
+        originalDateTime:
+          type: string
+          format: date-time
+          example: "2024-01-15T14:30:45"
+        timeSpan:
+          type: string
+          example: "1.12:30:00"
+        resultDateTime:
+          type: string
+          format: date-time
+          example: "2024-01-17T03:00:45"
+        timeZone:
+          type: string
+          example: "UTC"
+    
+    DayOfWeekResponse:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+          example: "2024-01-15"
+        dayOfWeek:
+          type: string
+          example: "Monday"
+        dayOfWeekNumber:
+          type: integer
+          description: Day of week as number (0=Sunday, 1=Monday, etc.)
+          example: 1
+        isWeekend:
+          type: boolean
+          example: false
+    
+    TimezoneListResponse:
+      type: object
+      properties:
+        timezones:
+          type: array
+          items:
+            type: string
+          description: Array of IANA timezone identifiers
+          example: ["Africa/Abidjan", "America/New_York", "Europe/London"]
+        total:
+          type: integer
+          description: Total number of timezones
+          example: 400
+    
+    TimezoneSearchResponse:
+      type: object
+      properties:
+        query:
+          type: string
+          description: Original search query
+          example: "London"
+        timezones:
+          type: array
+          items:
+            type: string
+          description: Matching timezone identifiers
+          example: ["Europe/London", "America/Kentucky/Louisville"]
+        matches:
+          type: integer
+          description: Number of matches found
+          example: 2
+    
+    TimezoneInfoResponse:
+      type: object
+      properties:
+        timezone:
+          type: string
+          example: "America/New_York"
+        abbreviation:
+          type: string
+          example: "EST"
+        utc_offset:
+          type: string
+          example: "-05:00"
+        dst_active:
+          type: boolean
+          example: false
+        dst_start:
+          type: string
+          format: date-time
+          example: "2024-03-10T07:00:00Z"
+        dst_end:
+          type: string
+          format: date-time
+          example: "2024-11-03T06:00:00Z"
+        location:
+          type: object
+          properties:
+            country:
+              type: string
+              example: "United States"
+            region:
+              type: string
+              example: "New York"
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error type
+          example: "Invalid timezone"
+        message:
+          type: string
+          description: Detailed error message
+          example: "The timezone 'Invalid/Timezone' is not recognized"
+        code:
+          type: integer
+          description: HTTP status code
+          example: 400
+
+paths:
+  /api/time/current:
+    get:
+      summary: Get Current Time
+      description: Get the current time for any timezone worldwide with accurate UTC offsets and DST handling.
+      tags:
+        - Time Operations
+      parameters:
+        - name: timezone
+          in: query
+          required: true
+          description: IANA timezone identifier (e.g., America/New_York)
+          schema:
+            type: string
+            example: "America/New_York"
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Current time information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentTimeResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/time/current/coordinate:
+    get:
+      summary: Get Current Time by Coordinates
+      description: Get current time for a specific geographic location using latitude and longitude coordinates.
+      tags:
+        - Time Operations
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          description: Latitude coordinate
+          schema:
+            type: number
+            format: float
+            example: 40.7128
+        - name: longitude
+          in: query
+          required: true
+          description: Longitude coordinate
+          schema:
+            type: number
+            format: float
+            example: -74.0060
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Current time information for coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CurrentTimeCoordinateResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/conversion/timezone:
+    post:
+      summary: Convert Time Between Zones
+      description: Convert time from one timezone to another with automatic DST handling and ambiguity resolution.
+      tags:
+        - Conversion Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimezoneConversionRequest'
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Converted time information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezoneConversionResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/timezone/list:
+    get:
+      summary: List All Timezones
+      description: Get a comprehensive list of all supported IANA timezone identifiers.
+      tags:
+        - TimeZone Operations
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: List of all supported timezones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezoneListResponse'
+        '401':
+          description: Unauthorized - Invalid or missing API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/timezone/search:
+    get:
+      summary: Search Timezones by City
+      description: Find timezone identifiers by searching for city or location names.
+      tags:
+        - TimeZone Operations
+      parameters:
+        - name: city
+          in: query
+          required: true
+          description: City or location name to search for
+          schema:
+            type: string
+            example: "London"
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Search results for timezone lookup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezoneSearchResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/timezone/info:
+    get:
+      summary: Get Timezone Information
+      description: Get detailed information about a specific timezone including DST rules and UTC offset.
+      tags:
+        - TimeZone Operations
+      parameters:
+        - name: timezone
+          in: query
+          required: true
+          description: IANA timezone identifier
+          schema:
+            type: string
+            example: "America/New_York"
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Detailed timezone information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezoneInfoResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/timezone/coordinate:
+    get:
+      summary: Get Timezone by Coordinates
+      description: Determine the timezone for a specific geographic location using latitude and longitude.
+      tags:
+        - TimeZone Operations
+      parameters:
+        - name: latitude
+          in: query
+          required: true
+          description: Latitude coordinate
+          schema:
+            type: number
+            format: float
+            example: 40.7128
+        - name: longitude
+          in: query
+          required: true
+          description: Longitude coordinate
+          schema:
+            type: number
+            format: float
+            example: -74.0060
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Timezone information for coordinates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezoneInfoResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/time/utc:
+    get:
+      summary: Get Current UTC Time
+      description: Get the current UTC time with high precision timestamp.
+      tags:
+        - Time Operations
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Current UTC time
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  utc_time:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T19:30:45Z"
+                  timestamp:
+                    type: integer
+                    format: int64
+                    example: 1705344645
+                  iso_format:
+                    type: string
+                    example: "2024-01-15T19:30:45.000Z"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/conversion/multi:
+    post:
+      summary: Convert to Multiple Timezones
+      description: Convert a single time to multiple timezones in one request.
+      tags:
+        - Conversion Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dateTime
+                - fromTimeZone
+                - toTimeZones
+              properties:
+                dateTime:
+                  type: string
+                  format: date-time
+                  example: "2024-01-15T19:30:45Z"
+                fromTimeZone:
+                  type: string
+                  example: "UTC"
+                toTimeZones:
+                  type: array
+                  items:
+                    type: string
+                  example: ["America/New_York", "Europe/London", "Asia/Tokyo"]
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Converted times for multiple timezones
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  originalDateTime:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T19:30:45Z"
+                  fromTimeZone:
+                    type: string
+                    example: "UTC"
+                  conversions:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        toTimeZone:
+                          type: string
+                          example: "America/New_York"
+                        convertedDateTime:
+                          type: string
+                          format: date-time
+                          example: "2024-01-15T14:30:45-05:00"
+                        utc_offset:
+                          type: string
+                          example: "-05:00"
+                        dst_active:
+                          type: boolean
+                          example: false
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/calculation/add:
+    post:
+      summary: Add Time Duration
+      description: Add a specified time duration to a given date and time.
+      tags:
+        - Calculation Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeOperationRequest'
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Time calculation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeOperationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/calculation/subtract:
+    post:
+      summary: Subtract Time Duration
+      description: Subtract a specified time duration from a given date and time.
+      tags:
+        - Calculation Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TimeOperationRequest'
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Time calculation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimeOperationResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/calculation/difference:
+    post:
+      summary: Calculate Time Difference
+      description: Calculate the difference between two dates and times.
+      tags:
+        - Calculation Operations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - startDateTime
+                - endDateTime
+              properties:
+                startDateTime:
+                  type: string
+                  format: date-time
+                  example: "2024-01-15T14:30:45"
+                endDateTime:
+                  type: string
+                  format: date-time
+                  example: "2024-01-17T03:00:45"
+                timeZone:
+                  type: string
+                  example: "UTC"
+      parameters:
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Time difference calculation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  startDateTime:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T14:30:45"
+                  endDateTime:
+                    type: string
+                    format: date-time
+                    example: "2024-01-17T03:00:45"
+                  difference:
+                    type: object
+                    properties:
+                      days:
+                        type: integer
+                        example: 1
+                      hours:
+                        type: integer
+                        example: 12
+                      minutes:
+                        type: integer
+                        example: 30
+                      seconds:
+                        type: integer
+                        example: 0
+                      total_seconds:
+                        type: integer
+                        example: 131400
+                  timeZone:
+                    type: string
+                    example: "UTC"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/calculation/dayofweek:
+    get:
+      summary: Get Day of Week
+      description: Get the day of the week for a specific date.
+      tags:
+        - Calculation Operations
+      parameters:
+        - name: date
+          in: query
+          required: true
+          description: Date in YYYY-MM-DD format
+          schema:
+            type: string
+            format: date
+            example: "2024-01-15"
+        - name: format
+          in: query
+          required: false
+          description: Output format
+          schema:
+            type: string
+            enum: [json, xml, csv]
+            default: json
+      responses:
+        '200':
+          description: Day of week information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DayOfWeekResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/health:
+    get:
+      summary: Health Check
+      description: Check the health and status of the TimeAPI service.
+      tags:
+        - System Operations
+      responses:
+        '200':
+          description: Service health status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2024-01-15T19:30:45Z"
+                  version:
+                    type: string
+                    example: "1.0.0"
+                  uptime:
+                    type: integer
+                    description: Service uptime in seconds
+                    example: 86400
+
+tags:
+  - name: Time Operations
+    description: Current time retrieval and basic time operations
+  - name: TimeZone Operations
+    description: Timezone information and lookup operations
+  - name: Conversion Operations
+    description: Timezone conversion between different zones
+  - name: Calculation Operations
+    description: Time calculations and date/time arithmetic
+  - name: System Operations
+    description: System health and monitoring endpoints
