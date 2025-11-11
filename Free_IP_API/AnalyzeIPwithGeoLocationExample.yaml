@@ -10,10 +10,9 @@ AgentDefinitions:
     Product: 'Security Copilot'
     AgentSingleInstanceConstraint: None
     Publisher: Microsoft CXE Demos
-    #RequiredSkillsets: []
     AgentSingleInstanceConstraint: Workspace
-    RequiredSkillsets:
-      - IPAnalysisAgent
+    #RequiredSkillsets:
+    #  - IPAnalysisAgent
     Triggers:
       - Name: default
         DefaultPollPeriodSeconds: 0
@@ -36,9 +35,10 @@ SkillGroups:
             Required: true
         Settings:
           Instructions: >-
-            Using the include API Skill, lookup the IP addres and present the
+            Using the FreeIPAPI skill, Lookup IPAddress and present the
             returned data in human readable format.   If an error code is
             returned, output the error.        
   - Format: API
     Settings:
+    - Name: FreeIPAPI
       OpenApiSpecUrl: https://raw.githubusercontent.com/Norseman42/SCP-Plugin-Examples/refs/heads/main/Free_IP_API/free_IP-API_OpenAPISpec.yaml
