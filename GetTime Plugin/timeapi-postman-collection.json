@@ -1,0 +1,355 @@
+{
+  "info": {
+    "name": "TimeAPI - Complete Time Zone API Collection",
+    "description": "Complete collection of all 12 TimeAPI endpoints across 5 categories for timezone conversion, current time operations, and timezone data services.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.1.0"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "X-API-Key",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "{{API_KEY}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "https://thetimeapi.dev",
+      "type": "string"
+    },
+    {
+      "key": "API_KEY",
+      "value": "your_api_key_here",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Time Operations",
+      "item": [
+        {
+          "name": "Get Current Time",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/time/current?timezone=America/New_York",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "time", "current"],
+              "query": [
+                {
+                  "key": "timezone",
+                  "value": "America/New_York",
+                  "description": "IANA timezone identifier"
+                }
+              ]
+            },
+            "description": "Get the current time for any timezone worldwide with accurate UTC offsets and DST handling."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current UTC Time",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/time/utc",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "time", "utc"]
+            },
+            "description": "Get the current UTC time with high precision timestamp."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Current Time by Coordinates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/time/current/coordinate?latitude=40.7128&longitude=-74.0060",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "time", "current", "coordinate"],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "40.7128",
+                  "description": "Latitude coordinate"
+                },
+                {
+                  "key": "longitude",
+                  "value": "-74.0060",
+                  "description": "Longitude coordinate"
+                }
+              ]
+            },
+            "description": "Get current time for a specific geographic location using latitude and longitude coordinates."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "TimeZone Operations",
+      "item": [
+        {
+          "name": "List All Timezones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/timezone/list",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "timezone", "list"]
+            },
+            "description": "Get a comprehensive list of all supported IANA timezone identifiers."
+          },
+          "response": []
+        },
+        {
+          "name": "Search Timezones by City",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/timezone/search?city=London",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "timezone", "search"],
+              "query": [
+                {
+                  "key": "city",
+                  "value": "London",
+                  "description": "City or location name to search"
+                }
+              ]
+            },
+            "description": "Find timezone identifiers by searching for city or location names."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Timezone Information",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/timezone/info?timezone=America/New_York",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "timezone", "info"],
+              "query": [
+                {
+                  "key": "timezone",
+                  "value": "America/New_York",
+                  "description": "IANA timezone identifier"
+                }
+              ]
+            },
+            "description": "Get detailed information about a specific timezone including DST rules and UTC offset."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Timezone by Coordinates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/timezone/coordinate?latitude=40.7128&longitude=-74.0060",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "timezone", "coordinate"],
+              "query": [
+                {
+                  "key": "latitude",
+                  "value": "40.7128",
+                  "description": "Latitude coordinate"
+                },
+                {
+                  "key": "longitude",
+                  "value": "-74.0060",
+                  "description": "Longitude coordinate"
+                }
+              ]
+            },
+            "description": "Determine the timezone for a specific geographic location using latitude and longitude."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Conversion Operations",
+      "item": [
+        {
+          "name": "Convert Time Between Zones",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fromTimeZone\": \"UTC\",\n  \"toTimeZone\": \"America/New_York\",\n  \"dateTime\": \"2024-01-15T19:30:45Z\",\n  \"dstAmbiguity\": \"earlier\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/conversion/timezone",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "conversion", "timezone"]
+            },
+            "description": "Convert time from one timezone to another with automatic DST handling and ambiguity resolution."
+          },
+          "response": []
+        },
+        {
+          "name": "Convert to Multiple Timezones",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dateTime\": \"2024-01-15T19:30:45Z\",\n  \"fromTimeZone\": \"UTC\",\n  \"toTimeZones\": [\"America/New_York\", \"Europe/London\", \"Asia/Tokyo\"]\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/conversion/multi",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "conversion", "multi"]
+            },
+            "description": "Convert a single time to multiple timezones in one request."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Calculation Operations",
+      "item": [
+        {
+          "name": "Add Time Duration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"baseDateTime\": \"2024-01-15T14:30:45\",\n  \"timeSpan\": \"1.12:30:00\",\n  \"timeZone\": \"UTC\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/calculation/add",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "calculation", "add"]
+            },
+            "description": "Add a specified time duration to a given date and time."
+          },
+          "response": []
+        },
+        {
+          "name": "Subtract Time Duration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"baseDateTime\": \"2024-01-15T14:30:45\",\n  \"timeSpan\": \"1.12:30:00\",\n  \"timeZone\": \"UTC\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/calculation/subtract",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "calculation", "subtract"]
+            },
+            "description": "Subtract a specified time duration from a given date and time."
+          },
+          "response": []
+        },
+        {
+          "name": "Calculate Time Difference",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startDateTime\": \"2024-01-15T14:30:45\",\n  \"endDateTime\": \"2024-01-17T03:00:45\",\n  \"timeZone\": \"UTC\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/calculation/difference",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "calculation", "difference"]
+            },
+            "description": "Calculate the difference between two dates and times."
+          },
+          "response": []
+        },
+        {
+          "name": "Get Day of Week",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/calculation/dayofweek?date=2024-01-15",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "calculation", "dayofweek"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-15",
+                  "description": "Date in YYYY-MM-DD format"
+                }
+              ]
+            },
+            "description": "Get the day of the week for a specific date."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "System Operations",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/health",
+              "host": ["{{BASE_URL}}"],
+              "path": ["api", "health"]
+            },
+            "description": "Check the health and status of the TimeAPI service."
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
