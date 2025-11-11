@@ -6,10 +6,10 @@ info:
     version: "v1"
 
 servers:
-    - url: https://freeipapi.com/api/
+    - url: https://us.freeipapi.com
 
 paths:
-    /json/{ipaddress}:
+    /api/json/{ipaddress}:
         get: 
             operationId: lookupIpAddressGeolocation
             summary: Lookup IP Address Geolocation information

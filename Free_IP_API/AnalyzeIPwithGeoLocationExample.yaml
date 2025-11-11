@@ -1,0 +1,44 @@
+Descriptor:
+  Name: AnalyzeIPwithGeoLocationExample
+  DisplayName: Analyze IP with GeoLocation Example
+  Description: Report what is known about a given IP Address from Free IP API
+  Icon: ''
+AgentDefinitions:
+  - Name: AnalyzeIPwithGeoLocationExample
+    DisplayName: Analyze IP with GeoLocation Example
+    Description: Report what is known about a given IP Address from Free IP API
+    Product: 'Security Copilot'
+    AgentSingleInstanceConstraint: None
+    Publisher: Microsoft CXE Demos
+    #RequiredSkillsets: []
+    AgentSingleInstanceConstraint: Workspace
+    RequiredSkillsets:
+      - IPAnalysisAgent
+    Triggers:
+      - Name: default
+        DefaultPollPeriodSeconds: 0
+        ProcessSkill: AnalyzeIPwithGeoLocationExample.IPAnalysisAgent
+    Settings:
+      - Name: IPAddress
+        Description: The IP Address desired
+        DefaultValue: ''
+        Required: true      
+SkillGroups:
+  - Format: Agent
+    Skills:
+      - Name: IPAnalysisAgent
+        DisplayName: IP Analysis Agent
+        Description: Lookup IP in public IP records and report what is known.
+        Inputs:
+          - Name: IPAddress
+            Description: The IP Address desired
+            DefaultValue: ''
+            Required: true
+        Settings:
+          Instructions: >-
+            Using the include API Skill, lookup the IP addres and present the
+            returned data in human readable format.   If an error code is
+            returned, output the error.        
+  - Format: API
+    Settings:
+      OpenApiSpecUrl: https://raw.githubusercontent.com/Norseman42/SCP-Plugin-Examples/refs/heads/main/Free_IP_API/free_IP-API_OpenAPISpec.yaml
